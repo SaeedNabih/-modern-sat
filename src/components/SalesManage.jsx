@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -14,19 +14,29 @@ import {
   Users,
   TrendingUp,
   Trash2,
+  Tag,
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
+import { useModal } from "@/hooks/useModal";
 
 export default function SalesManage() {
-  const { products, sales, addSale, deleteSale, getStats } = useStore();
+  const { products, sales, addSale, deleteSale, getStats, getProductDiscount } =
+    useStore();
   const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     productId: "",
     count: "1",
     price: "",
     date: new Date().toISOString().split("T")[0],
   });
-  const [confirmDelete, setConfirmDelete] = useState({ open: false, id: null });
+  const [isClient, setIsClient] = useState(false);
+  const { showError, showSuccess, showConfirm, showInfo } = useModal();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const stats = getStats();
 
@@ -51,10 +61,14 @@ export default function SalesManage() {
 
   const salesData = generateSalesData(sales);
 
-  const handleProductSearch = (term) => {
+  // Auto-search when typing
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
+
     if (!term.trim()) {
       setSuggestions([]);
-      setFormData((p) => ({ ...p, productId: "", price: "" }));
+      setShowSuggestions(false);
+      setFormData((prev) => ({ ...prev, productId: "", price: "" }));
       return;
     }
 
@@ -64,31 +78,52 @@ export default function SalesManage() {
           p.title.toLowerCase().includes(term.toLowerCase()) &&
           parseInt(p.stock) > 0
       )
-      .slice(0, 5);
+      .slice(0, 8);
 
     setSuggestions(filtered);
+    setShowSuggestions(true);
   };
 
   const handleSelectProduct = (product) => {
+    const discount = getProductDiscount(product.id);
+    let finalPrice = product.price;
+
+    if (discount) {
+      if (discount.type === "percentage") {
+        finalPrice = product.price * (1 - discount.amount / 100);
+      } else {
+        finalPrice = Math.max(0, product.price - discount.amount);
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       productId: product.id,
-      price: product.price,
+      price: finalPrice.toString(),
     }));
+    setSearchTerm(product.title);
+    setShowSuggestions(false);
     setSuggestions([]);
   };
 
   const handleAddSale = (e) => {
     e.preventDefault();
+
     if (!formData.productId || !formData.count || !formData.price) {
-      alert("Please fill all required fields");
+      showError("Please fill all required fields");
       return;
     }
 
     const selected = products.find((p) => p.id === formData.productId);
-    if (!selected) return alert("Product not found");
-    if (parseInt(selected.stock) < parseInt(formData.count))
-      return alert(`Not enough stock. Available: ${selected.stock}`);
+    if (!selected) {
+      showError("Product not found");
+      return;
+    }
+
+    if (parseInt(selected.stock) < parseInt(formData.count)) {
+      showError(`Not enough stock. Available: ${selected.stock}`);
+      return;
+    }
 
     addSale({
       id: Date.now(),
@@ -107,14 +142,55 @@ export default function SalesManage() {
       price: "",
       date: new Date().toISOString().split("T")[0],
     });
+    setSearchTerm("");
+    setShowSuggestions(false);
+    setSuggestions([]);
+
+    showSuccess("Sale added successfully!");
   };
 
-  const handleDeleteSale = (id) => setConfirmDelete({ open: true, id });
-  const confirmDeleteSale = () => {
-    deleteSale(confirmDelete.id);
-    setConfirmDelete({ open: false, id: null });
+  const handleDeleteSale = (id) => {
+    showConfirm(
+      "Are you sure you want to delete this sale? The product quantity will be restored.",
+      () => {
+        deleteSale(id);
+        showSuccess("Sale deleted successfully.");
+      },
+      "Delete Sale"
+    );
   };
-  const cancelDelete = () => setConfirmDelete({ open: false, id: null });
+
+  const getDiscountBadge = (productId) => {
+    const discount = getProductDiscount(productId);
+    if (!discount) return null;
+
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-md border border-green-500/30">
+        <Tag size={10} />
+        {discount.type === "percentage"
+          ? `${discount.amount}% OFF`
+          : `${discount.amount} EGP OFF`}
+      </span>
+    );
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setFormData((prev) => ({ ...prev, productId: "", price: "" }));
+  };
+
+  if (!isClient) {
+    return (
+      <div className="w-full flex flex-col gap-8 pb-10">
+        <div className="animate-pulse">
+          <div className="h-8 bg-[#1a1a1a] rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-[#1a1a1a] rounded w-1/2 mb-8"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col gap-8 pb-10">
@@ -138,29 +214,85 @@ export default function SalesManage() {
           {/* Product Search */}
           <div className="flex flex-col relative">
             <label className="text-sm text-gray-400 mb-2">Product Name *</label>
-            <input
-              type="text"
-              value={
-                products.find((p) => p.id === formData.productId)?.title || ""
-              }
-              onChange={(e) => handleProductSearch(e.target.value)}
-              placeholder="Search for a product..."
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
-            />
-            {suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg mt-1 z-20 max-h-60 overflow-y-auto">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                placeholder="Enter product name"
+                className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="px-3 bg-[#2a2a2a] border border-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#3a3a3a] transition"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {/* Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg mt-1 z-20 max-h-60 overflow-y-auto shadow-lg">
                 {suggestions.map((product) => (
                   <div
                     key={product.id}
                     onClick={() => handleSelectProduct(product)}
-                    className="px-4 py-2 hover:bg-[#2a2a2a] cursor-pointer flex justify-between"
+                    className="px-4 py-3 hover:bg-[#2a2a2a] cursor-pointer flex flex-col border-b border-[#2a2a2a] last:border-b-0"
                   >
-                    <span className="text-gray-200">{product.title}</span>
-                    <span className="text-gray-400 text-xs sm:text-sm">
-                      Stock: {product.stock} | {product.price} EGP
-                    </span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-200 font-medium">
+                        {product.title}
+                      </span>
+                      <span className="text-gray-400 text-xs sm:text-sm">
+                        Stock: {product.stock}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-green-400 text-sm font-medium">
+                        {getProductDiscount(product.id) ? (
+                          <>
+                            <span className="line-through text-gray-500 mr-2">
+                              {product.price} EGP
+                            </span>
+                            {(getProductDiscount(product.id).type ===
+                            "percentage"
+                              ? product.price *
+                                (1 -
+                                  getProductDiscount(product.id).amount / 100)
+                              : Math.max(
+                                  0,
+                                  product.price -
+                                    getProductDiscount(product.id).amount
+                                )
+                            ).toFixed(2)}{" "}
+                            EGP
+                          </>
+                        ) : (
+                          `${product.price} EGP`
+                        )}
+                      </span>
+                      {getProductDiscount(product.id) && (
+                        <span className="text-green-400 text-xs bg-green-500/20 px-2 py-1 rounded">
+                          {getProductDiscount(product.id).type === "percentage"
+                            ? `${getProductDiscount(product.id).amount}% OFF`
+                            : `${
+                                getProductDiscount(product.id).amount
+                              } EGP OFF`}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* No Results */}
+            {showSuggestions && suggestions.length === 0 && searchTerm && (
+              <div className="absolute top-full left-0 right-0 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg mt-1 z-20 p-4 text-center text-gray-400">
+                No products found
               </div>
             )}
           </div>
@@ -168,15 +300,24 @@ export default function SalesManage() {
           {/* Price */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-400 mb-2">Price (EGP) *</label>
-            <input
-              type="number"
-              value={formData.price}
-              onChange={(e) =>
-                setFormData((p) => ({ ...p, price: e.target.value }))
-              }
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600"
-              required
-            />
+            <div className="relative">
+              <input
+                type="number"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData((p) => ({ ...p, price: e.target.value }))
+                }
+                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
+                required
+                step="0.01"
+                min="0"
+              />
+              {getProductDiscount(formData.productId) && (
+                <div className="absolute -top-2 right-2">
+                  {getDiscountBadge(formData.productId)}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Quantity */}
@@ -285,8 +426,29 @@ export default function SalesManage() {
                   key={sale.id}
                   className="bg-[#1a1a1a] hover:bg-[#202020] transition rounded-lg"
                 >
-                  <td className="py-3 px-3 text-gray-100">{sale.title}</td>
-                  <td className="py-3 px-3">{sale.price} EGP</td>
+                  <td className="py-3 px-3 text-gray-100">
+                    <div className="flex items-center gap-2">
+                      {sale.title}
+                      {sale.discountId && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded border border-green-500/30">
+                          <Tag size={8} />
+                          Discount
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-3">
+                    {sale.discountId ? (
+                      <div className="flex flex-col">
+                        <span className="text-green-400">{sale.price} EGP</span>
+                        <span className="text-xs text-gray-500 line-through">
+                          {sale.originalPrice} EGP
+                        </span>
+                      </div>
+                    ) : (
+                      `${sale.price} EGP`
+                    )}
+                  </td>
                   <td className="py-3 px-3">{sale.count}</td>
                   <td className="py-3 px-3">{sale.category}</td>
                   <td className="py-3 px-3">{sale.total} EGP</td>
@@ -312,35 +474,6 @@ export default function SalesManage() {
           </tbody>
         </table>
       </div>
-
-      {/* Confirm Delete Modal */}
-      {confirmDelete.open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-sm bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-5">
-            <h3 className="text-lg font-semibold text-gray-100">
-              Confirm Delete
-            </h3>
-            <p className="text-sm text-gray-400 mt-1 mb-4">
-              Are you sure you want to delete this sale? The product quantity
-              will be restored.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={cancelDelete}
-                className="px-4 py-2 rounded-lg bg-[#1a1a1a] text-gray-300 hover:bg-[#2a2a2a] transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDeleteSale}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

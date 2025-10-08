@@ -20,6 +20,7 @@ export default function ProductsManage() {
   const [filterCategory, setFilterCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [editing, setEditing] = useState(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const categories = [
     "TVs",
@@ -61,7 +62,18 @@ export default function ProductsManage() {
     setQuery("");
     setFilterCategory("");
     setSortOrder("");
+    setShowSearchResults(false);
   };
+
+  const handleSearch = () => {
+    setShowSearchResults(true);
+  };
+
+  const clearSearch = () => {
+    setQuery("");
+    setShowSearchResults(false);
+  };
+
   const applySort = (list) => {
     if (sortOrder === "asc")
       return [...list].sort((a, b) => Number(a.price) - Number(b.price));
@@ -94,17 +106,31 @@ export default function ProductsManage() {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-4">
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
           <div className="relative min-w-[220px] w-full lg:w-[320px]">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-            />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              type="text"
-              placeholder="Search products..."
-              className="w-full bg-[#111] border border-[#2a2a2a] rounded-lg pl-9 pr-3 py-2 text-sm text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-700"
-            />
+            <div className="flex gap-2">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                type="text"
+                placeholder="Search products..."
+                className="flex-1 bg-[#111] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-700"
+              />
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="px-3 bg-[#2a2a2a] border border-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#3a3a3a] transition"
+              >
+                <Search size={18} />
+              </button>
+              {query && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="px-3 bg-[#2a2a2a] border border-[#3a3a3a] text-gray-300 rounded-lg hover:bg-[#3a3a3a] transition"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
 
           <select
@@ -159,6 +185,24 @@ export default function ProductsManage() {
           </button>
         </div>
       </div>
+
+      {/* Search Results Info */}
+      {showSearchResults && query && (
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-gray-300 text-sm">
+              Showing {filtered.length} results for "
+              <span className="text-gray-100">{query}</span>"
+            </p>
+            <button
+              onClick={clearSearch}
+              className="text-gray-500 hover:text-gray-300 text-sm"
+            >
+              Clear search
+            </button>
+          </div>
+        </div>
+      )}
 
       {viewMode === "table" ? (
         <div className="bg-[#0d0d0d] border border-[#1a1a1a] rounded-xl p-6 overflow-x-auto">
@@ -217,7 +261,9 @@ export default function ProductsManage() {
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={7} className="py-6 text-center text-gray-500">
-                    No products found.
+                    {query
+                      ? "No products found matching your search."
+                      : "No products found."}
                   </td>
                 </tr>
               )}
@@ -282,7 +328,9 @@ export default function ProductsManage() {
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center text-gray-500 py-8">
-              No products found.
+              {query
+                ? "No products found matching your search."
+                : "No products found."}
             </div>
           )}
         </div>

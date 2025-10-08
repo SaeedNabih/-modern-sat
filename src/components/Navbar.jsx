@@ -1,17 +1,33 @@
 "use client";
-import { Menu, User } from "lucide-react";
+import { Menu, User, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export default function Navbar({
   onToggleSidebar,
   isSidebarCollapsed,
-  offsetLeft,
+  isMobile,
+  sidebarOpen,
 }) {
   return (
-    <header
-      style={{ left: offsetLeft }}
-      className="fixed top-0 right-0 z-30 h-16 bg-[#111111] border-b border-[#1f1f1f] flex items-center justify-between px-6 transition-all duration-300"
-    >
+    <header className="fixed top-0 right-0 z-50 h-16 bg-[#111111] border-b border-[#1f1f1f] flex items-center justify-between px-4 md:px-6 transition-all duration-300 w-full">
       <div className="flex items-center gap-4">
+        <button
+          onClick={onToggleSidebar}
+          className="p-2 rounded-lg hover:bg-[#2a2a2a] transition md:hidden"
+        >
+          <Menu size={20} className="text-gray-400" />
+        </button>
+
+        <button
+          onClick={onToggleSidebar}
+          className="hidden md:flex p-2 rounded-lg hover:bg-[#2a2a2a] transition"
+        >
+          {isSidebarCollapsed ? (
+            <Menu size={20} className="text-gray-400" />
+          ) : (
+            <X size={20} className="text-gray-400" />
+          )}
+        </button>
+
         <h1 className="text-lg font-semibold text-gray-200 tracking-tight">
           Modern <span className="text-gray-400">Sat</span>
         </h1>

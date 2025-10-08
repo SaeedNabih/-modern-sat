@@ -9,7 +9,6 @@ const initialState = {
   settings: {
     storeName: "Modern Sat",
     currency: "EGP",
-    language: "ar",
     dateFormat: "dd/MM/yyyy",
     theme: "dark",
     notifications: {
@@ -26,6 +25,7 @@ export const useStore = create(
     (set, get) => ({
       ...initialState,
 
+      // Product Actions
       addProduct: (product) =>
         set((state) => ({ products: [product, ...state.products] })),
 
@@ -43,17 +43,28 @@ export const useStore = create(
 
       resetProducts: () => set({ products: [] }),
 
+      // Sale Actions
       addSale: (sale) => {
         const { products, getActiveDiscounts } = get();
 
         const activeDiscounts = getActiveDiscounts();
         const productDiscount = activeDiscounts.find(
-          (d) => d.product.toLowerCase() === sale.title.toLowerCase()
+          (d) => d.productId === sale.productId
         );
 
         const originalPrice = parseFloat(sale.price);
-        const discountAmount = productDiscount ? productDiscount.amount : 0;
-        const finalPrice = Math.max(0, originalPrice - discountAmount);
+        let discountAmount = 0;
+        let finalPrice = originalPrice;
+
+        if (productDiscount) {
+          if (productDiscount.type === "percentage") {
+            discountAmount = (originalPrice * productDiscount.amount) / 100;
+          } else {
+            discountAmount = productDiscount.amount;
+          }
+          finalPrice = Math.max(0, originalPrice - discountAmount);
+        }
+
         const finalTotal = (finalPrice * parseInt(sale.count)).toString();
 
         const updatedProducts = products.map((product) => {
@@ -74,6 +85,7 @@ export const useStore = create(
           total: finalTotal,
           originalPrice: originalPrice.toString(),
           discount: discountAmount.toString(),
+          discountId: productDiscount?.id || null,
         };
 
         set((state) => ({
@@ -108,6 +120,7 @@ export const useStore = create(
 
       resetSales: () => set({ sales: [] }),
 
+      // Discount Actions
       addDiscount: (discount) =>
         set((state) => ({ discounts: [discount, ...state.discounts] })),
 
@@ -125,15 +138,22 @@ export const useStore = create(
 
       resetDiscounts: () => set({ discounts: [] }),
 
+      // Settings Actions
       updateSettings: (newSettings) =>
         set((state) => ({
           settings: { ...state.settings, ...newSettings },
         })),
 
+      // Utility Functions
       getActiveDiscounts: () => {
         const { discounts } = get();
         const today = new Date().toISOString().split("T")[0];
-        return discounts.filter((d) => d.expires >= today);
+        return discounts.filter((d) => d.expires >= today && d.isActive);
+      },
+
+      getProductDiscount: (productId) => {
+        const activeDiscounts = get().getActiveDiscounts();
+        return activeDiscounts.find((d) => d.productId === productId);
       },
 
       getStats: () => {
@@ -167,6 +187,7 @@ export const useStore = create(
         };
       },
 
+      // Export/Import Functions
       exportData: () => {
         const state = get();
         return {
@@ -175,16 +196,24 @@ export const useStore = create(
           discounts: state.discounts,
           settings: state.settings,
           exportedAt: new Date().toISOString(),
+          version: "1.0",
         };
       },
 
       importData: (data) => {
+        // Validate data structure
+        if (!data.products || !data.sales || !data.discounts) {
+          throw new Error("Invalid data format");
+        }
+
         set({
           products: data.products || [],
           sales: data.sales || [],
           discounts: data.discounts || [],
           settings: data.settings || get().settings,
         });
+
+        return true;
       },
 
       resetAll: () => set(initialState),
