@@ -1,225 +1,139 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { githubService } from "@/services/githubService";
+import { initialState } from "./initialState";
+import { createProductActions } from "./actions/productActions";
+import { createSalesActions } from "./actions/salesActions";
+import { createDiscountActions } from "./actions/discountActions";
+import { createUtilityActions } from "./actions/utilityActions";
 
-const initialState = {
-  products: [],
-  sales: [],
-  discounts: [],
-  settings: {
-    storeName: "Modern Sat",
-    currency: "EGP",
-    dateFormat: "dd/MM/yyyy",
-    theme: "dark",
-    notifications: {
-      lowStock: true,
-      newSales: true,
-      discountExpiry: true,
-      dailyReports: false,
+// دالة ترحيل محسنة
+const migrateData = (persistedState, version) => {
+  if (!persistedState) return initialState;
+
+  console.log("🔄 Migrating data from version:", version);
+
+  // تأكد من وجود جميع الحقول الأساسية
+  const migratedState = {
+    ...initialState,
+    ...persistedState,
+    products: persistedState.products || initialState.products,
+    sales: persistedState.sales || initialState.sales,
+    discounts: persistedState.discounts || initialState.discounts,
+    settings: {
+      ...initialState.settings,
+      ...(persistedState.settings || {}),
     },
-  },
+    syncStatus: persistedState.syncStatus || "idle",
+  };
+
+  console.log("✅ Data migration completed");
+  return migratedState;
 };
 
 export const useStore = create(
   persist(
     (set, get) => ({
       ...initialState,
+      ...createProductActions(set, get),
+      ...createSalesActions(set, get),
+      ...createDiscountActions(set, get),
+      ...createUtilityActions(set, get),
 
-      // Product Actions
-      addProduct: (product) =>
-        set((state) => ({ products: [product, ...state.products] })),
+      // GitHub Sync Functions
+      syncToCloud: async () => {
+        set({ syncStatus: "syncing" });
 
-      updateProduct: (updated) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === updated.id ? updated : p
-          ),
-        })),
+        try {
+          const connectionOk = await githubService.testConnection();
+          if (!connectionOk) {
+            throw new Error(
+              "Cannot connect to GitHub. Check your token and repository."
+            );
+          }
 
-      deleteProduct: (id) =>
-        set((state) => ({
-          products: state.products.filter((p) => p.id !== id),
-        })),
+          const state = get();
+          const data = {
+            products: state.products,
+            sales: state.sales,
+            discounts: state.discounts,
+            settings: state.settings,
+            lastSync: new Date().toISOString(),
+            version: "2.0",
+          };
 
-      resetProducts: () => set({ products: [] }),
+          const success = await githubService.saveData(data);
 
-      // Sale Actions
-      addSale: (sale) => {
-        const { products, getActiveDiscounts } = get();
-
-        const activeDiscounts = getActiveDiscounts();
-        const productDiscount = activeDiscounts.find(
-          (d) => d.productId === sale.productId
-        );
-
-        const originalPrice = parseFloat(sale.price);
-        let discountAmount = 0;
-        let finalPrice = originalPrice;
-
-        if (productDiscount) {
-          if (productDiscount.type === "percentage") {
-            discountAmount = (originalPrice * productDiscount.amount) / 100;
+          if (success) {
+            set({ syncStatus: "success" });
+            return true;
           } else {
-            discountAmount = productDiscount.amount;
+            throw new Error("Failed to save data to cloud");
           }
-          finalPrice = Math.max(0, originalPrice - discountAmount);
-        }
-
-        const finalTotal = (finalPrice * parseInt(sale.count)).toString();
-
-        const updatedProducts = products.map((product) => {
-          if (product.id === sale.productId) {
-            return {
-              ...product,
-              stock: (
-                parseInt(product.stock) - parseInt(sale.count)
-              ).toString(),
-            };
-          }
-          return product;
-        });
-
-        const saleWithDiscount = {
-          ...sale,
-          price: finalPrice.toString(),
-          total: finalTotal,
-          originalPrice: originalPrice.toString(),
-          discount: discountAmount.toString(),
-          discountId: productDiscount?.id || null,
-        };
-
-        set((state) => ({
-          sales: [saleWithDiscount, ...state.sales],
-          products: updatedProducts,
-        }));
-      },
-
-      deleteSale: (id) => {
-        const { sales, products } = get();
-        const saleToDelete = sales.find((s) => s.id === id);
-
-        if (saleToDelete) {
-          const updatedProducts = products.map((product) => {
-            if (product.id === saleToDelete.productId) {
-              return {
-                ...product,
-                stock: (
-                  parseInt(product.stock) + parseInt(saleToDelete.count)
-                ).toString(),
-              };
-            }
-            return product;
-          });
-
-          set({
-            sales: sales.filter((s) => s.id !== id),
-            products: updatedProducts,
-          });
+        } catch (error) {
+          set({ syncStatus: "error" });
+          throw error;
         }
       },
 
-      resetSales: () => set({ sales: [] }),
+      syncFromCloud: async () => {
+        set({ syncStatus: "syncing" });
 
-      // Discount Actions
-      addDiscount: (discount) =>
-        set((state) => ({ discounts: [discount, ...state.discounts] })),
+        try {
+          const connectionOk = await githubService.testConnection();
+          if (!connectionOk) {
+            throw new Error(
+              "Cannot connect to GitHub. Check your token and repository."
+            );
+          }
 
-      updateDiscount: (updated) =>
-        set((state) => ({
-          discounts: state.discounts.map((d) =>
-            d.id === updated.id ? updated : d
-          ),
-        })),
-
-      deleteDiscount: (id) =>
-        set((state) => ({
-          discounts: state.discounts.filter((d) => d.id !== id),
-        })),
-
-      resetDiscounts: () => set({ discounts: [] }),
-
-      // Settings Actions
-      updateSettings: (newSettings) =>
-        set((state) => ({
-          settings: { ...state.settings, ...newSettings },
-        })),
-
-      // Utility Functions
-      getActiveDiscounts: () => {
-        const { discounts } = get();
-        const today = new Date().toISOString().split("T")[0];
-        return discounts.filter((d) => d.expires >= today && d.isActive);
+          const cloudData = await githubService.loadData();
+          if (cloudData) {
+            set({
+              products: cloudData.products || [],
+              sales: cloudData.sales || [],
+              discounts: cloudData.discounts || [],
+              settings: cloudData.settings || get().settings,
+              syncStatus: "success",
+            });
+            return true;
+          } else {
+            throw new Error("No data found in cloud repository");
+          }
+        } catch (error) {
+          set({ syncStatus: "error" });
+          throw error;
+        }
       },
 
-      getProductDiscount: (productId) => {
-        const activeDiscounts = get().getActiveDiscounts();
-        return activeDiscounts.find((d) => d.productId === productId);
-      },
+      clearSyncStatus: () => set({ syncStatus: "idle" }),
 
-      getStats: () => {
-        const { products, sales } = get();
-        const totalProducts = products.length;
-        const totalSalesCount = sales.length;
-        const totalRevenue = sales.reduce(
-          (sum, sale) => sum + parseFloat(sale.total),
-          0
-        );
-        const totalDiscounts = sales.reduce(
-          (sum, sale) => sum + parseFloat(sale.discount || 0),
-          0
-        );
-
-        const totalProfit = sales.reduce((sum, sale) => {
-          const product = products.find((p) => p.id === sale.productId);
-          if (!product) return sum;
-          const cost = parseFloat(product.cost || 0);
-          const revenue = parseFloat(sale.total);
-          const quantity = parseInt(sale.count);
-          return sum + (revenue - cost * quantity);
-        }, 0);
-
-        return {
-          totalProducts,
-          totalSales: totalRevenue,
-          totalSalesCount,
-          totalProfit,
-          totalDiscounts,
-        };
-      },
-
-      // Export/Import Functions
-      exportData: () => {
+      // دالة مساعدة لفحص البيانات
+      checkDataHealth: () => {
         const state = get();
+        const issues = [];
+
+        if (!state.products) issues.push("Missing products array");
+        if (!state.sales) issues.push("Missing sales array");
+        if (!state.discounts) issues.push("Missing discounts array");
+        if (!state.syncStatus) issues.push("Missing syncStatus");
+
         return {
-          products: state.products,
-          sales: state.sales,
-          discounts: state.discounts,
-          settings: state.settings,
-          exportedAt: new Date().toISOString(),
-          version: "1.0",
+          healthy: issues.length === 0,
+          issues,
+          version: state.version || "unknown",
         };
       },
-
-      importData: (data) => {
-        // Validate data structure
-        if (!data.products || !data.sales || !data.discounts) {
-          throw new Error("Invalid data format");
-        }
-
-        set({
-          products: data.products || [],
-          sales: data.sales || [],
-          discounts: data.discounts || [],
-          settings: data.settings || get().settings,
-        });
-
-        return true;
-      },
-
-      resetAll: () => set(initialState),
     }),
     {
       name: "modern-sat-storage",
+      version: 2,
+      migrate: migrateData,
+      // إضافة صحّة التخزين
+      onRehydrateStorage: () => (state) => {
+        console.log("💾 Storage rehydrated:", state ? "success" : "failed");
+      },
     }
   )
 );

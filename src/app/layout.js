@@ -30,6 +30,20 @@ export default function RootLayout({ children }) {
           body { 
             -webkit-user-select: none; 
             user-select: none; 
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+          }
+          
+          /* تحسينات أداء إضافية */
+          * {
+            box-sizing: border-box;
+          }
+          
+          /* منع التحديد في العناصر التفاعلية */
+          button, input, select, textarea {
+            -webkit-user-select: none;
+            user-select: none;
           }
         `}</style>
       </head>
@@ -37,13 +51,38 @@ export default function RootLayout({ children }) {
         <LayoutClient>{children}</LayoutClient>
         <ModalComponent />
 
+        {/* Scripts لحماية إضافية */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               document.addEventListener('DOMContentLoaded', function() {
-                document.addEventListener('contextmenu', (e) => e.preventDefault());
-                document.addEventListener('copy', (e) => e.preventDefault());
-                document.addEventListener('cut', (e) => e.preventDefault());
+                // منع النقر بزر الماوس الأيمن
+                document.addEventListener('contextmenu', (e) => {
+                  e.preventDefault();
+                  return false;
+                });
+                
+                // منع النسخ والقص
+                document.addEventListener('copy', (e) => {
+                  e.preventDefault();
+                  return false;
+                });
+                
+                document.addEventListener('cut', (e) => {
+                  e.preventDefault();
+                  return false;
+                });
+                
+                // منع سحب الصور
+                document.addEventListener('dragstart', (e) => {
+                  if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                  }
+                });
+                
+                
+                console.log('🔒 Security features activated');
               });
             `,
           }}

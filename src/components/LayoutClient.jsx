@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
 import PrivateAccess from "@/components/PrivateAccess";
+import DataMigrationFix from "./DataMigrationFix";
 
 export default function LayoutClient({ children }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -51,6 +52,8 @@ export default function LayoutClient({ children }) {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-gray-200 font-[Inter] flex">
       <PrivateAccess />
+      <DataMigrationFix />
+
       <div
         className={`
         hidden md:block fixed top-0 left-0 h-screen bg-[#111111] border-r border-[#1f1f1f] 

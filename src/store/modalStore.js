@@ -1,35 +1,38 @@
 "use client";
 import { create } from "zustand";
 
-export const useModalStore = create((set, get) => ({
+const initialState = {
   isOpen: false,
   title: "",
   message: "",
-  type: "info", // 'info', 'success', 'warning', 'error', 'confirm'
+  type: "info",
   onConfirm: null,
   onCancel: null,
   confirmText: "Confirm",
   cancelText: "Cancel",
-  showCancel: true,
+  showCancel: false,
+};
+
+export const useModalStore = create((set, get) => ({
+  ...initialState,
 
   showModal: (options) => {
     set({
       isOpen: true,
-      type: "info",
-      confirmText: "OK",
-      cancelText: "Cancel",
-      showCancel: false,
+      ...initialState,
       ...options,
     });
   },
 
   hideModal: () => {
-    set({ isOpen: false });
+    set({
+      isOpen: false,
+    });
   },
 
   confirmModal: () => {
     const { onConfirm, hideModal } = get();
-    if (onConfirm) {
+    if (onConfirm && typeof onConfirm === "function") {
       onConfirm();
     }
     hideModal();
@@ -37,9 +40,13 @@ export const useModalStore = create((set, get) => ({
 
   cancelModal: () => {
     const { onCancel, hideModal } = get();
-    if (onCancel) {
+    if (onCancel && typeof onCancel === "function") {
       onCancel();
     }
     hideModal();
+  },
+
+  resetModal: () => {
+    set(initialState);
   },
 }));
