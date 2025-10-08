@@ -1,5 +1,15 @@
 {
-  "products": [],
+  "products": [
+    {
+      "id": 1759940609670,
+      "title": "test",
+      "category": "TvBracket",
+      "price": "552",
+      "stock": "54",
+      "cost": "120",
+      "date": "08/10/2025"
+    }
+  ],
   "sales": [],
   "discounts": [],
   "settings": {
@@ -14,6 +24,6 @@
       "dailyReports": false
     }
   },
-  "lastSync": "2025-10-08T16:14:44.283Z",
+  "lastSync": "2025-10-08T16:23:36.102Z",
   "version": "2.0"
 }
