@@ -38,5 +38,65 @@
     "inStock": false,
     "createdAt": "2025-10-09T19:47:23.488Z",
     "updatedAt": "2025-10-09T19:47:27.984Z"
+  },
+  "1760039254320": {
+    "id": "1760039254320",
+    "name": "Product 5",
+    "price": 516,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:34.320Z",
+    "updatedAt": "2025-10-09T19:47:34.320Z"
+  },
+  "1760039254912": {
+    "id": "1760039254912",
+    "name": "Product 6",
+    "price": 983,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:34.912Z",
+    "updatedAt": "2025-10-09T19:47:34.912Z"
+  },
+  "1760039255080": {
+    "id": "1760039255080",
+    "name": "Product 7",
+    "price": 565,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:35.080Z",
+    "updatedAt": "2025-10-09T19:47:35.080Z"
+  },
+  "1760039255240": {
+    "id": "1760039255240",
+    "name": "Product 8",
+    "price": 809,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:35.240Z",
+    "updatedAt": "2025-10-09T19:47:35.240Z"
+  },
+  "1760039255392": {
+    "id": "1760039255392",
+    "name": "Product 9",
+    "price": 140,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:35.392Z",
+    "updatedAt": "2025-10-09T19:47:35.392Z"
+  },
+  "1760039255544": {
+    "id": "1760039255544",
+    "name": "Product 10",
+    "price": 137,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:35.544Z",
+    "updatedAt": "2025-10-09T19:47:35.544Z"
   }
 }
