@@ -1,6 +1,7 @@
 import "./globals.css";
 import LayoutClient from "@/components/LayoutClient";
 import ModalComponent from "@/components/ModalComponent";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Modern Sat - Dashboard",
@@ -48,7 +49,10 @@ export default function RootLayout({ children }) {
         `}</style>
       </head>
       <body className="h-full bg-[#0a0a0a] text-white font-[Inter] antialiased">
-        <LayoutClient>{children}</LayoutClient>
+        <LayoutClient>
+          {children}
+          <SpeedInsights />
+        </LayoutClient>
         <ModalComponent />
 
         {/* Scripts لحماية إضافية */}
