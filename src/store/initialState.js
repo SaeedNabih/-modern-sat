@@ -2,6 +2,7 @@ export const initialState = {
   products: [],
   sales: [],
   discounts: [],
+  categories: ["Electronics", "Clothing", "Books", "Home"],
   settings: {
     storeName: "Modern Sat",
     currency: "EGP",
@@ -13,10 +14,10 @@ export const initialState = {
       discountExpiry: true,
       dailyReports: false,
     },
+    autoSync: true, // إضافة إعداد المزامنة التلقائية
+    syncInterval: 30000, // كل 30 ثانية
   },
-  syncStatus: "idle", // 'idle', 'syncing', 'success', 'error'
-
-  // إضافة حقول جديدة للتأكد من التوافق
-  version: "2.0",
+  syncStatus: "idle",
+  version: "2.1",
   lastUpdated: new Date().toISOString(),
 };

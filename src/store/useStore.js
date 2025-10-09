@@ -14,16 +14,21 @@ const migrateData = (persistedState, version) => {
 
   console.log("🔄 Migrating data from version:", version);
 
-  // تأكد من وجود جميع الحقول الأساسية
   const migratedState = {
     ...initialState,
     ...persistedState,
     products: persistedState.products || initialState.products,
     sales: persistedState.sales || initialState.sales,
     discounts: persistedState.discounts || initialState.discounts,
+    categories: persistedState.categories || initialState.categories,
     settings: {
       ...initialState.settings,
       ...(persistedState.settings || {}),
+      autoSync:
+        persistedState.settings?.autoSync ?? initialState.settings.autoSync,
+      syncInterval:
+        persistedState.settings?.syncInterval ??
+        initialState.settings.syncInterval,
     },
     syncStatus: persistedState.syncStatus || "idle",
   };
@@ -40,99 +45,23 @@ export const useStore = create(
       ...createSalesActions(set, get),
       ...createDiscountActions(set, get),
       ...createUtilityActions(set, get),
-
-      // GitHub Sync Functions
-      syncToCloud: async () => {
-        set({ syncStatus: "syncing" });
-
-        try {
-          const connectionOk = await githubService.testConnection();
-          if (!connectionOk) {
-            throw new Error(
-              "Cannot connect to GitHub. Check your token and repository."
-            );
-          }
-
-          const state = get();
-          const data = {
-            products: state.products,
-            sales: state.sales,
-            discounts: state.discounts,
-            settings: state.settings,
-            lastSync: new Date().toISOString(),
-            version: "2.0",
-          };
-
-          const success = await githubService.saveData(data);
-
-          if (success) {
-            set({ syncStatus: "success" });
-            return true;
-          } else {
-            throw new Error("Failed to save data to cloud");
-          }
-        } catch (error) {
-          set({ syncStatus: "error" });
-          throw error;
-        }
-      },
-
-      syncFromCloud: async () => {
-        set({ syncStatus: "syncing" });
-
-        try {
-          const connectionOk = await githubService.testConnection();
-          if (!connectionOk) {
-            throw new Error(
-              "Cannot connect to GitHub. Check your token and repository."
-            );
-          }
-
-          const cloudData = await githubService.loadData();
-          if (cloudData) {
-            set({
-              products: cloudData.products || [],
-              sales: cloudData.sales || [],
-              discounts: cloudData.discounts || [],
-              settings: cloudData.settings || get().settings,
-              syncStatus: "success",
-            });
-            return true;
-          } else {
-            throw new Error("No data found in cloud repository");
-          }
-        } catch (error) {
-          set({ syncStatus: "error" });
-          throw error;
-        }
-      },
-
-      clearSyncStatus: () => set({ syncStatus: "idle" }),
-
-      // دالة مساعدة لفحص البيانات
-      checkDataHealth: () => {
-        const state = get();
-        const issues = [];
-
-        if (!state.products) issues.push("Missing products array");
-        if (!state.sales) issues.push("Missing sales array");
-        if (!state.discounts) issues.push("Missing discounts array");
-        if (!state.syncStatus) issues.push("Missing syncStatus");
-
-        return {
-          healthy: issues.length === 0,
-          issues,
-          version: state.version || "unknown",
-        };
-      },
     }),
     {
       name: "modern-sat-storage",
-      version: 2,
+      version: 3,
       migrate: migrateData,
-      // إضافة صحّة التخزين
       onRehydrateStorage: () => (state) => {
         console.log("💾 Storage rehydrated:", state ? "success" : "failed");
+        if (state) {
+          console.log("📊 Data summary:", {
+            products: state.products?.length || 0,
+            sales: state.sales?.length || 0,
+            discounts: state.discounts?.length || 0,
+            categories: state.categories?.length || 0,
+            version: state.version || "unknown",
+            autoSync: state.settings?.autoSync || false,
+          });
+        }
       },
     }
   )

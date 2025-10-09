@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   X,
@@ -13,7 +13,8 @@ import {
 import { useStore } from "@/store/useStore";
 
 export default function ProductsManage() {
-  const { products, addProduct, updateProduct, deleteProduct } = useStore();
+  const { products, categories, addProduct, updateProduct, deleteProduct } =
+    useStore();
   const [showModal, setShowModal] = useState(false);
   const [viewMode, setViewMode] = useState("table");
   const [query, setQuery] = useState("");
@@ -21,15 +22,6 @@ export default function ProductsManage() {
   const [sortOrder, setSortOrder] = useState("");
   const [editing, setEditing] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
-
-  const categories = [
-    "TVs",
-    "TvBracket",
-    "Remote",
-    "Receiver",
-    "Cables",
-    "SatelliteCables",
-  ];
 
   const openAdd = () => {
     setEditing(null);
@@ -45,7 +37,7 @@ export default function ProductsManage() {
     const payload = {
       id: editing ? editing.id : Date.now(),
       title: data.title.trim() || "Untitled Product",
-      category: data.category || "Uncategorized",
+      category: data.category || "",
       price: data.price.trim() || "0",
       stock: data.stock.trim() || "0",
       cost: data.cost?.trim() || "0",
@@ -186,6 +178,46 @@ export default function ProductsManage() {
         </div>
       </div>
 
+      {/* Category Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {products.length}
+          </div>
+          <div className="text-xs text-gray-500">Total Products</div>
+        </div>
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {products.filter((p) => !p.category || p.category === "").length}
+          </div>
+          <div className="text-xs text-gray-500">Uncategorized</div>
+        </div>
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {products.filter((p) => parseInt(p.stock) < 5).length}
+          </div>
+          <div className="text-xs text-red-400">Low Stock</div>
+        </div>
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {products.filter((p) => parseInt(p.stock) === 0).length}
+          </div>
+          <div className="text-xs text-red-500">Out of Stock</div>
+        </div>
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {categories.length}
+          </div>
+          <div className="text-xs text-gray-500">Categories</div>
+        </div>
+        <div className="bg-[#111] border border-[#1f1f1f] rounded-lg p-3 text-center">
+          <div className="text-lg font-semibold text-gray-100">
+            {products.reduce((sum, p) => sum + parseInt(p.stock), 0)}
+          </div>
+          <div className="text-xs text-gray-500">Total Stock</div>
+        </div>
+      </div>
+
       {/* Search Results Info */}
       {showSearchResults && query && (
         <div className="bg-[#111] border border-[#1f1f1f] rounded-xl p-4">
@@ -224,21 +256,33 @@ export default function ProductsManage() {
                   key={p.id}
                   className="bg-[#141414] hover:bg-[#1c1c1c] transition"
                 >
-                  <td className="py-3 px-3">{p.title}</td>
-                  <td className="py-3 px-3">{p.category}</td>
+                  <td className="py-3 px-3 text-gray-100">{p.title}</td>
+                  <td className="py-3 px-3">
+                    {p.category ? (
+                      <span className="text-gray-300">{p.category}</span>
+                    ) : (
+                      <span className="text-gray-500 italic">
+                        Uncategorized
+                      </span>
+                    )}
+                  </td>
                   <td
-                    className={`py-3 px-3 ${
-                      parseInt(p.stock) < 5
+                    className={`py-3 px-3 font-medium ${
+                      parseInt(p.stock) === 0
+                        ? "text-red-500"
+                        : parseInt(p.stock) < 5
                         ? "text-red-400"
                         : parseInt(p.stock) < 10
                         ? "text-yellow-400"
-                        : "text-gray-300"
+                        : "text-green-400"
                     }`}
                   >
                     {p.stock}
                   </td>
-                  <td className="py-3 px-3">{p.price} EGP</td>
-                  <td className="py-3 px-3 text-gray-500">${p.cost || "0"}</td>
+                  <td className="py-3 px-3 text-gray-100">{p.price} EGP</td>
+                  <td className="py-3 px-3 text-gray-500">
+                    {p.cost || "0"} EGP
+                  </td>
                   <td className="py-3 px-3 text-gray-500">{p.date}</td>
                   <td className="py-3 px-3">
                     <div className="flex items-center gap-2">
@@ -275,7 +319,7 @@ export default function ProductsManage() {
           {filtered.map((p) => (
             <div
               key={p.id}
-              className="bg-[#111] border border-[#1f1f1f] rounded-xl p-4 flex flex-col justify-between"
+              className="bg-[#111] border border-[#1f1f1f] rounded-xl p-4 flex flex-col justify-between hover:bg-[#141414] transition-all"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
@@ -284,7 +328,9 @@ export default function ProductsManage() {
                   </div>
                   <div>
                     <h3 className="text-gray-100 font-medium">{p.title}</h3>
-                    <p className="text-gray-400 text-xs">{p.category}</p>
+                    <p className="text-gray-400 text-xs">
+                      {p.category || "Uncategorized"}
+                    </p>
                   </div>
                 </div>
                 <div className="text-gray-400 text-sm">{p.date}</div>
@@ -295,18 +341,20 @@ export default function ProductsManage() {
                     {p.price} EGP
                   </div>
                   <div
-                    className={`text-xs ${
-                      parseInt(p.stock) < 5
+                    className={`text-xs font-medium ${
+                      parseInt(p.stock) === 0
+                        ? "text-red-500"
+                        : parseInt(p.stock) < 5
                         ? "text-red-400"
                         : parseInt(p.stock) < 10
                         ? "text-yellow-400"
-                        : "text-gray-400"
+                        : "text-green-400"
                     }`}
                   >
-                    Stock: <span className="text-gray-200">{p.stock}</span>
+                    Stock: {p.stock}
                   </div>
                   <div className="text-gray-500 text-xs">
-                    Cost: ${p.cost || "0"}
+                    Cost: {p.cost || "0"} EGP
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -339,6 +387,7 @@ export default function ProductsManage() {
       {showModal && (
         <Modal
           editing={editing}
+          categories={categories}
           onClose={() => {
             setShowModal(false);
             setEditing(null);
@@ -350,7 +399,7 @@ export default function ProductsManage() {
   );
 }
 
-function Modal({ editing, onClose, onSave }) {
+function Modal({ editing, categories, onClose, onSave }) {
   const [title, setTitle] = useState(editing ? editing.title : "");
   const [category, setCategory] = useState(editing ? editing.category : "");
   const [stock, setStock] = useState(editing ? editing.stock : "");
@@ -381,56 +430,59 @@ function Modal({ editing, onClose, onSave }) {
             onChange={(e) => setTitle(e.target.value)}
             type="text"
             placeholder="Product Name"
-            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300"
+            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
+
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300"
+            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600"
           >
-            <option value="" disabled>
-              Select Category
-            </option>
-            <option value="TVs">TVs</option>
-            <option value="TvBracket">Tv Brackets</option>
-            <option value="Remote">Remotes</option>
-            <option value="Receiver">Receivers</option>
-            <option value="Cables">Cables</option>
-            <option value="SatelliteCables">Satellite Cables</option>
+            <option value="">Select Category</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
           </select>
+
           <input
             value={stock}
             onChange={(e) => setStock(e.target.value)}
             type="number"
             placeholder="Stock Quantity"
-            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300"
+            min="0"
+            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
+
           <input
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             type="text"
             placeholder="Selling Price (EGP)"
-            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300"
+            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
+
           <input
             value={cost}
             onChange={(e) => setCost(e.target.value)}
             type="text"
-            placeholder="Cost Price (for profit calculation)"
-            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300"
+            placeholder="Cost Price (EGP)"
+            className="bg-[#141414] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
-          <div className="flex items-center justify-end gap-3">
+
+          <div className="flex items-center justify-end gap-3 mt-4">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-[#1a1a1a] text-gray-300"
+              className="px-4 py-2 rounded-lg bg-[#1a1a1a] text-gray-300 border border-[#2a2a2a] hover:bg-[#2a2a2a] transition"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-gray-300 to-gray-500 text-gray-900 font-semibold hover:from-gray-200 hover:to-gray-400"
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-gray-300 to-gray-500 text-gray-900 font-semibold hover:from-gray-200 hover:to-gray-400 transition-all"
             >
-              Save
+              {editing ? "Update" : "Add"} Product
             </button>
           </div>
         </div>
