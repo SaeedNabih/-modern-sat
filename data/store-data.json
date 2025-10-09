@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760045057806,
+      "title": "Remote one saf",
+      "category": "Remote",
+      "price": "25",
+      "stock": "4",
+      "cost": "13",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760044669914,
       "title": "Remote lg",
       "category": "Remote lg",
@@ -51,7 +60,8 @@
   "categories": [
     "Remote lg",
     "Remote timer 1",
-    "Remote"
+    "Remote",
+    "Hagar"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -67,6 +77,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T21:22:16.814Z",
+  "lastSync": "2025-10-09T21:24:57.660Z",
   "version": "2.1"
 }
