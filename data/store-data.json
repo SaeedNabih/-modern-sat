@@ -27,7 +27,8 @@
   ],
   "discounts": [],
   "categories": [
-    "Remote"
+    "Remote",
+    "Remote lg"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -43,6 +44,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T20:47:26.326Z",
+  "lastSync": "2025-10-09T21:15:32.999Z",
   "version": "2.1"
 }
