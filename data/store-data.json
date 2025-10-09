@@ -1,22 +1,12 @@
 {
-  "products": [
-    {
-      "id": 1760042447660,
-      "title": "test",
-      "category": "test",
-      "price": "20",
-      "stock": "156",
-      "cost": "2",
-      "date": "09/10/2025"
-    }
-  ],
+  "products": [],
   "sales": [],
   "discounts": [],
   "categories": [
-    "test"
+    "rae"
   ],
   "settings": {
-    "storeName": "Modern Sat",
+    "storeName": "Modern Sat sad",
     "currency": "EGP",
     "dateFormat": "dd/MM/yyyy",
     "theme": "dark",
@@ -27,9 +17,8 @@
       "dailyReports": false
     },
     "autoSync": true,
-    "syncInterval": 30000,
-    "language": "ar"
+    "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T20:41:20.433Z",
+  "lastSync": "2025-10-09T20:43:16.991Z",
   "version": "2.1"
 }
