@@ -1,0 +1,12 @@
+{
+  "1760039234880": {
+    "id": "1760039234880",
+    "name": "Product 1",
+    "price": 1040,
+    "category": "Electronics",
+    "description": "New product description",
+    "inStock": true,
+    "createdAt": "2025-10-09T19:47:14.880Z",
+    "updatedAt": "2025-10-09T19:47:14.880Z"
+  }
+}
