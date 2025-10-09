@@ -2,7 +2,9 @@
   "products": [],
   "sales": [],
   "discounts": [],
-  "categories": [],
+  "categories": [
+    "Remote"
+  ],
   "settings": {
     "storeName": "Modern Sat",
     "currency": "EGP",
@@ -17,6 +19,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T20:45:58.466Z",
+  "lastSync": "2025-10-09T20:46:10.372Z",
   "version": "2.1"
 }
