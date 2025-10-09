@@ -1,5 +1,15 @@
 {
-  "products": [],
+  "products": [
+    {
+      "id": 1760042447660,
+      "title": "test",
+      "category": "test",
+      "price": "20",
+      "stock": "156",
+      "cost": "2",
+      "date": "09/10/2025"
+    }
+  ],
   "sales": [],
   "discounts": [],
   "categories": [
@@ -20,6 +30,6 @@
     "syncInterval": 30000,
     "language": "ar"
   },
-  "lastSync": "2025-10-09T20:40:36.438Z",
+  "lastSync": "2025-10-09T20:40:53.401Z",
   "version": "2.1"
 }
