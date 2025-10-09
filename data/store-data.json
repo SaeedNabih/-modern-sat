@@ -31,12 +31,12 @@
   },
   "1760039243488": {
     "id": "1760039243488",
-    "name": "Product 4",
-    "price": 771,
+    "name": "Product 4 (Updated)",
+    "price": 781,
     "category": "Electronics",
     "description": "New product description",
-    "inStock": true,
+    "inStock": false,
     "createdAt": "2025-10-09T19:47:23.488Z",
-    "updatedAt": "2025-10-09T19:47:23.488Z"
+    "updatedAt": "2025-10-09T19:47:27.984Z"
   }
 }
