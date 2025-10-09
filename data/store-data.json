@@ -1,0 +1,22 @@
+{
+  "products": [],
+  "sales": [],
+  "discounts": [],
+  "categories": [
+    "said"
+  ],
+  "settings": {
+    "storeName": "Modern Sat",
+    "currency": "EGP",
+    "dateFormat": "dd/MM/yyyy",
+    "theme": "dark",
+    "notifications": {
+      "lowStock": true,
+      "newSales": true,
+      "discountExpiry": true,
+      "dailyReports": false
+    }
+  },
+  "lastSync": "2025-10-09T20:26:17.270Z",
+  "version": "2.1"
+}
