@@ -1,9 +1,18 @@
 {
   "products": [
     {
+      "id": 1760044669914,
+      "title": "Remote lg",
+      "category": "Remote lg",
+      "price": "23",
+      "stock": "9",
+      "cost": "60",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760042809592,
       "title": "Remote",
-      "category": "Remote",
+      "category": "Remote timer 1",
       "price": "55",
       "stock": "99",
       "cost": "30",
@@ -11,6 +20,19 @@
     }
   ],
   "sales": [
+    {
+      "id": 1760044756441,
+      "productId": 1760044669914,
+      "title": "Remote lg",
+      "price": "40",
+      "count": "1",
+      "total": "40",
+      "category": "Remote lg",
+      "date": "2025-10-09",
+      "originalPrice": "40",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760042828975,
       "productId": 1760042809592,
@@ -27,8 +49,8 @@
   ],
   "discounts": [],
   "categories": [
-    "Remote",
-    "Remote lg"
+    "Remote lg",
+    "Remote timer 1"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -44,6 +66,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T21:15:32.999Z",
+  "lastSync": "2025-10-09T21:21:54.438Z",
   "version": "2.1"
 }
