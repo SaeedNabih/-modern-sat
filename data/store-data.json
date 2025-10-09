@@ -1,6 +1,30 @@
 {
-  "products": [],
-  "sales": [],
+  "products": [
+    {
+      "id": 1760042809592,
+      "title": "Remote",
+      "category": "Remote",
+      "price": "55",
+      "stock": "99",
+      "cost": "30",
+      "date": "09/10/2025"
+    }
+  ],
+  "sales": [
+    {
+      "id": 1760042828975,
+      "productId": 1760042809592,
+      "title": "Remote",
+      "price": "55",
+      "count": "1",
+      "total": "55",
+      "category": "Remote",
+      "date": "2025-10-09",
+      "originalPrice": "55",
+      "discount": "0",
+      "discountId": null
+    }
+  ],
   "discounts": [],
   "categories": [
     "Remote"
@@ -19,6 +43,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T20:46:10.372Z",
+  "lastSync": "2025-10-09T20:47:26.326Z",
   "version": "2.1"
 }
