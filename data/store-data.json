@@ -4,7 +4,7 @@
   "discounts": [],
   "categories": [],
   "settings": {
-    "storeName": "Modern Sat sad",
+    "storeName": "Modern Sat",
     "currency": "EGP",
     "dateFormat": "dd/MM/yyyy",
     "theme": "dark",
@@ -15,8 +15,9 @@
       "dailyReports": false
     },
     "autoSync": true,
-    "syncInterval": 30000
+    "syncInterval": 30000,
+    "language": "ar"
   },
-  "lastSync": "2025-10-09T20:35:19.240Z",
+  "lastSync": "2025-10-09T20:39:01.217Z",
   "version": "2.1"
 }
