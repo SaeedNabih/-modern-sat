@@ -50,7 +50,8 @@
   "discounts": [],
   "categories": [
     "Remote lg",
-    "Remote timer 1"
+    "Remote timer 1",
+    "Remote"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -66,6 +67,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T21:21:54.438Z",
+  "lastSync": "2025-10-09T21:22:16.814Z",
   "version": "2.1"
 }
