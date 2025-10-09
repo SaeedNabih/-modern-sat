@@ -1,20 +1,8 @@
 {
-  "products": [
-    {
-      "id": 1760042447660,
-      "title": "test",
-      "category": "testdasd",
-      "price": "20",
-      "stock": "156",
-      "cost": "2",
-      "date": "09/10/2025"
-    }
-  ],
+  "products": [],
   "sales": [],
   "discounts": [],
-  "categories": [
-    "testdasd"
-  ],
+  "categories": [],
   "settings": {
     "storeName": "Modern Sat",
     "currency": "EGP",
@@ -30,6 +18,6 @@
     "syncInterval": 30000,
     "language": "ar"
   },
-  "lastSync": "2025-10-09T20:43:36.304Z",
+  "lastSync": "2025-10-09T20:44:20.818Z",
   "version": "2.1"
 }
