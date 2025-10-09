@@ -15,9 +15,8 @@
       "dailyReports": false
     },
     "autoSync": true,
-    "syncInterval": 30000,
-    "language": "ar"
+    "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T20:44:20.818Z",
+  "lastSync": "2025-10-09T20:45:58.466Z",
   "version": "2.1"
 }
