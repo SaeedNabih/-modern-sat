@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760102230819,
+      "title": "ملف قنوات",
+      "category": "ملف قنوات",
+      "price": "20",
+      "stock": "9997",
+      "cost": "0",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760102102208,
       "title": "سلك 100 بارده عادي",
       "category": "سلك 100 يارده",
@@ -23,7 +32,7 @@
       "title": "Hagar",
       "category": "Hagar",
       "price": "10",
-      "stock": "18",
+      "stock": "17",
       "cost": "2.5",
       "date": "10/10/2025"
     },
@@ -32,7 +41,7 @@
       "title": "Remote one saf",
       "category": "Remote",
       "price": "25",
-      "stock": "2",
+      "stock": "0",
       "cost": "13",
       "date": "10/10/2025"
     },
@@ -50,12 +59,90 @@
       "title": "Remote",
       "category": "Remote timer 1",
       "price": "55",
-      "stock": "99",
+      "stock": "98",
       "cost": "30",
       "date": "09/10/2025"
     }
   ],
   "sales": [
+    {
+      "id": 1760115146473,
+      "productId": 1760045057806,
+      "title": "Remote one saf",
+      "price": "25",
+      "count": "1",
+      "total": "25",
+      "category": "Remote",
+      "date": "2025-10-10",
+      "originalPrice": "25",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760115138138,
+      "productId": 1760045192474,
+      "title": "Hagar",
+      "price": "10",
+      "count": "1",
+      "total": "10",
+      "category": "Hagar",
+      "date": "2025-10-10",
+      "originalPrice": "10",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760115126085,
+      "productId": 1760045057806,
+      "title": "Remote one saf",
+      "price": "25",
+      "count": "1",
+      "total": "25",
+      "category": "Remote",
+      "date": "2025-10-10",
+      "originalPrice": "25",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760115112988,
+      "productId": 1760042809592,
+      "title": "Remote",
+      "price": "50",
+      "count": "1",
+      "total": "50",
+      "category": "Remote timer 1",
+      "date": "2025-10-10",
+      "originalPrice": "50",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760115092865,
+      "productId": 1760102230819,
+      "title": "ملف قنوات",
+      "price": "40",
+      "count": "2",
+      "total": "80",
+      "category": "ملف قنوات",
+      "date": "2025-10-10",
+      "originalPrice": "40",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760102249141,
+      "productId": 1760102230819,
+      "title": "ملف قنوات",
+      "price": "15",
+      "count": "1",
+      "total": "15",
+      "category": "ملف قنوات",
+      "date": "2025-10-10",
+      "originalPrice": "15",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760102155475,
       "productId": 1760045192474,
@@ -169,7 +256,8 @@
     "Hagar",
     "Adabtor",
     "سلك 100 يارده",
-    "ملف قنوات"
+    "ملف قنوات",
+    "سالك 50 يارده اسود"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -185,6 +273,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-10T13:16:17.116Z",
+  "lastSync": "2025-10-10T16:53:00.620Z",
   "version": "2.1"
 }
