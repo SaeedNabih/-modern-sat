@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760090315075,
+      "title": "Adabtor 12v",
+      "category": "Adabtor",
+      "price": "60",
+      "stock": "2",
+      "cost": "25",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760045192474,
       "title": "Hagar",
       "category": "Hagar",
@@ -38,6 +47,19 @@
     }
   ],
   "sales": [
+    {
+      "id": 1760090335140,
+      "productId": 1760090315075,
+      "title": "Adabtor 12v",
+      "price": "50",
+      "count": "1",
+      "total": "50",
+      "category": "Adabtor",
+      "date": "2025-10-10",
+      "originalPrice": "50",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760045319356,
       "productId": 1760045192474,
@@ -97,7 +119,8 @@
     "Remote timer 1",
     "Remote",
     "Hagar",
-    "Adabtor"
+    "Adabtor",
+    "سلك 100 يارده"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -113,6 +136,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-10T09:57:43.404Z",
+  "lastSync": "2025-10-10T13:14:10.728Z",
   "version": "2.1"
 }
