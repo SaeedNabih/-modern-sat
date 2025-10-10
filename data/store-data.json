@@ -1,11 +1,20 @@
 {
   "products": [
     {
+      "id": 1760045192474,
+      "title": "Hagar",
+      "category": "Hagar",
+      "price": "10",
+      "stock": "19",
+      "cost": "2.5",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760045057806,
       "title": "Remote one saf",
       "category": "Remote",
       "price": "25",
-      "stock": "4",
+      "stock": "3",
       "cost": "13",
       "date": "10/10/2025"
     },
@@ -29,6 +38,32 @@
     }
   ],
   "sales": [
+    {
+      "id": 1760045319356,
+      "productId": 1760045192474,
+      "title": "Hagar",
+      "price": "10",
+      "count": "1",
+      "total": "10",
+      "category": "Hagar",
+      "date": "2025-10-09",
+      "originalPrice": "10",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760045267310,
+      "productId": 1760045057806,
+      "title": "Remote one saf",
+      "price": "25",
+      "count": "1",
+      "total": "25",
+      "category": "Remote",
+      "date": "2025-10-09",
+      "originalPrice": "25",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760044756441,
       "productId": 1760044669914,
@@ -61,7 +96,8 @@
     "Remote lg",
     "Remote timer 1",
     "Remote",
-    "Hagar"
+    "Hagar",
+    "Adabtor"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -77,6 +113,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-09T21:24:57.660Z",
+  "lastSync": "2025-10-10T09:57:43.404Z",
   "version": "2.1"
 }
