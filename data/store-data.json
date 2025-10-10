@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760102102208,
+      "title": "سلك 100 بارده عادي",
+      "category": "سلك 100 يارده",
+      "price": "400",
+      "stock": "0",
+      "cost": "300",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760090315075,
       "title": "Adabtor 12v",
       "category": "Adabtor",
@@ -14,7 +23,7 @@
       "title": "Hagar",
       "category": "Hagar",
       "price": "10",
-      "stock": "19",
+      "stock": "18",
       "cost": "2.5",
       "date": "10/10/2025"
     },
@@ -23,7 +32,7 @@
       "title": "Remote one saf",
       "category": "Remote",
       "price": "25",
-      "stock": "3",
+      "stock": "2",
       "cost": "13",
       "date": "10/10/2025"
     },
@@ -47,6 +56,45 @@
     }
   ],
   "sales": [
+    {
+      "id": 1760102155475,
+      "productId": 1760045192474,
+      "title": "Hagar",
+      "price": "10",
+      "count": "1",
+      "total": "10",
+      "category": "Hagar",
+      "date": "2025-10-10",
+      "originalPrice": "10",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760102151075,
+      "productId": 1760045057806,
+      "title": "Remote one saf",
+      "price": "25",
+      "count": "1",
+      "total": "25",
+      "category": "Remote",
+      "date": "2025-10-10",
+      "originalPrice": "25",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760102131262,
+      "productId": 1760102102208,
+      "title": "سلك 100 بارده عادي",
+      "price": "400",
+      "count": "1",
+      "total": "400",
+      "category": "سلك 100 يارده",
+      "date": "2025-10-10",
+      "originalPrice": "400",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760090335140,
       "productId": 1760090315075,
@@ -120,7 +168,8 @@
     "Remote",
     "Hagar",
     "Adabtor",
-    "سلك 100 يارده"
+    "سلك 100 يارده",
+    "ملف قنوات"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -136,6 +185,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-10T13:14:10.728Z",
+  "lastSync": "2025-10-10T13:16:17.116Z",
   "version": "2.1"
 }
