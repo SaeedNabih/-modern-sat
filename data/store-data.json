@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760115212647,
+      "title": "سالك 50 بارده اسود",
+      "category": "سالك 50 يارده اسود",
+      "price": "150",
+      "stock": "2",
+      "cost": "110",
+      "date": "10/10/2025"
+    },
+    {
       "id": 1760102230819,
       "title": "ملف قنوات",
       "category": "ملف قنوات",
@@ -49,9 +58,9 @@
       "id": 1760044669914,
       "title": "Remote lg",
       "category": "Remote lg",
-      "price": "23",
+      "price": "60",
       "stock": "9",
-      "cost": "60",
+      "cost": "23",
       "date": "10/10/2025"
     },
     {
@@ -59,12 +68,38 @@
       "title": "Remote",
       "category": "Remote timer 1",
       "price": "55",
-      "stock": "98",
+      "stock": "97",
       "cost": "30",
       "date": "09/10/2025"
     }
   ],
   "sales": [
+    {
+      "id": 1760476546320,
+      "productId": 1760042809592,
+      "title": "Remote",
+      "price": "50",
+      "count": "1",
+      "total": "50",
+      "category": "Remote timer 1",
+      "date": "2025-10-14",
+      "originalPrice": "50",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760115229942,
+      "productId": 1760115212647,
+      "title": "سالك 50 بارده اسود",
+      "price": "150",
+      "count": "1",
+      "total": "150",
+      "category": "سالك 50 يارده اسود",
+      "date": "2025-10-10",
+      "originalPrice": "150",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760115146473,
       "productId": 1760045057806,
@@ -257,7 +292,8 @@
     "Adabtor",
     "سلك 100 يارده",
     "ملف قنوات",
-    "سالك 50 يارده اسود"
+    "سالك 50 يارده اسود",
+    "كابل hd معوج"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -273,6 +309,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-10T16:53:00.620Z",
+  "lastSync": "2025-10-14T21:16:06.094Z",
   "version": "2.1"
 }
