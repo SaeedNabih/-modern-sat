@@ -1,6 +1,15 @@
 {
   "products": [
     {
+      "id": 1760476696038,
+      "title": "ريموت تايمر",
+      "category": "ريموت تايمر",
+      "price": "25",
+      "stock": "19",
+      "cost": "13",
+      "date": "15/10/2025"
+    },
+    {
       "id": 1760476599418,
       "title": "كابل hd معوج",
       "category": "كابل hd معوج",
@@ -50,7 +59,7 @@
       "title": "Hagar",
       "category": "Hagar",
       "price": "10",
-      "stock": "17",
+      "stock": "16",
       "cost": "2.5",
       "date": "10/10/2025"
     },
@@ -83,6 +92,32 @@
     }
   ],
   "sales": [
+    {
+      "id": 1760476720764,
+      "productId": 1760045192474,
+      "title": "Hagar",
+      "price": "10",
+      "count": "1",
+      "total": "10",
+      "category": "Hagar",
+      "date": "2025-10-14",
+      "originalPrice": "10",
+      "discount": "0",
+      "discountId": null
+    },
+    {
+      "id": 1760476701357,
+      "productId": 1760476696038,
+      "title": "ريموت تايمر",
+      "price": "25",
+      "count": "1",
+      "total": "25",
+      "category": "ريموت تايمر",
+      "date": "2025-10-14",
+      "originalPrice": "25",
+      "discount": "0",
+      "discountId": null
+    },
     {
       "id": 1760476622282,
       "productId": 1760476599418,
@@ -316,7 +351,8 @@
     "ملف قنوات",
     "سالك 50 يارده اسود",
     "كابل hd معوج",
-    "ريموت تايمر"
+    "ريموت تايمر",
+    "شكرتون"
   ],
   "settings": {
     "storeName": "Modern Sat",
@@ -332,6 +368,6 @@
     "autoSync": true,
     "syncInterval": 30000
   },
-  "lastSync": "2025-10-14T21:17:42.368Z",
+  "lastSync": "2025-10-14T21:18:53.066Z",
   "version": "2.1"
 }
